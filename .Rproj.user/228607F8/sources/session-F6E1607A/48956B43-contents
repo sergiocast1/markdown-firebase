@@ -1,0 +1,101 @@
+---
+title: "Netflix"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+library(dplyr)
+netflix <-read.csv("https://raw.githubusercontent.com/jeaggo/datasets/master/imdb.csv")
+```
+
+
+
+Generos
+===
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Grafica 1
+PELICULAS AGRUPADAS POR GENERO
+LAS PELICULAS QUE MAS SE PRODUCEN SON LAS DE ACCION (Obtenidas de Firebase Storage)
+
+     
+```{r}
+df <- netflix
+df <- df %>% group_by(genre)
+df <- df %>% summarize(count = n())
+fig <- df %>% plot_ly(labels = ~genre, values = ~count)
+fig <- fig %>% add_pie(hole = 0.4)
+fig <- fig %>% layout(title = "Agrupado por genero",  showlegend = T,
+              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+fig
+```
+
+Paises
+===
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Grafica 2
+PELICULAS AGRUPADAS POR GENERO, LAS PELICULAS
+QUE MAS SE PRODUCEN SON LAS DE ACCION.
+
+```{r}
+df <- netflix
+df <- df %>% group_by(country)
+df <- df %>% summarize(count = n())
+fig <- plot_ly(data = df, x = ~country, y = ~count, color = ~country)
+fig
+```
+
+Escritores
+===
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Grafica 3
+TOP 10 de escritores con mayor produccion de peliculas
+
+```{r}
+df <- netflix
+df <- df %>% group_by(writer)
+df <- df %>% summarize(count = n())
+df <- df[order(df$count, decreasing = TRUE),]
+df <- df %>% top_n(10)  # highest values
+parents=c("", "", "", "", "", "", "", "", "", "", "")
+fig <- plot_ly(
+  type='treemap',
+  labels=df$writer,
+  parents=parents,
+  values=df$count,
+  textinfo="label+value",
+  maxdepth=1)
+fig
+```
+
+Taquilla
+===
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Grafica 4
+TOP 10 de peliculas mas taquilleras
+
+```{r}
+df <- netflix
+df <- df %>% group_by(name)
+df <- df %>% summarize(suma = sum(gross))
+df <- df[order(df$suma, decreasing = TRUE),]
+df <- df %>% top_n(10)  # highest values
+fig1 <- plot_ly(df, x = ~name, y = ~suma, type = 'bar', name = 'Country',
+                marker = list(color = 'rgb(158,202,225)',
+                              line = list(color = 'rgb(8,48,107)', width = 1.5)))
+fig1 <- fig1 %>% layout(yaxis = list(title = 'Count'), barmode = 'group')
+fig1
+```

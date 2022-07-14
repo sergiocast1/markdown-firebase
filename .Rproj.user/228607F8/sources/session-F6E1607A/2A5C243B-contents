@@ -1,0 +1,6 @@
+name: "Netflix"
+navbar:
+  title: "Netflix"
+  left:
+    - text: "Home"
+      href: index.html

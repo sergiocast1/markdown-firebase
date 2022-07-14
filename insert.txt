@@ -1,0 +1,5 @@
+<img src="https://firebasestorage.googleapis.com/v0/b/netflix-adolfo-centeno.appspot.com/o/images%2Fwaveslogo.jpg?alt=media&token=8b2512d1-4731-483f-a152-084d6fd3905b"
+     alt="logo empresa"
+     width="50"
+     height="50"
+/>
